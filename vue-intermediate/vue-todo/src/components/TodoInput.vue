@@ -33,7 +33,8 @@ export default {
   methods: {
     addTodo() {
       if (this.newTodoItem !== '') {
-        this.$emit('todoItem', this.newTodoItem)
+        this.$store.commit('todoItem',this.newTodoItem)
+        //this.$emit('todoItem', this.newTodoItem)
         this.clearInput();
       }else{
         this.showModal = !this.showModal;
