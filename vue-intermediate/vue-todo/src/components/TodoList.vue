@@ -1,10 +1,10 @@
 <template>
   <div id="app">
       <transition-group name="list" tag="ul">
-        <li v-for=" (todoItem,index) in this.$store.state.todoItems" v-bind:key="todoItem.item" class="shadow">
-          <i class="checkBtn fas fa-check" v-bind:class="{checkBtnCompleted:todoItem.completed}" v-on:click="itemCompleted(todoItem,index)"></i>
+        <li v-for=" (todoItem,index) in this.storedTodoItems" v-bind:key="todoItem.item" class="shadow">
+          <i class="checkBtn fas fa-check" v-bind:class="{checkBtnCompleted:todoItem.completed}" v-on:click="itemCompleted({todoItem,index})"></i>
           <span v-bind:class="{textCompleted:todoItem.completed}">{{todoItem.item}}</span>
-          <span class="removeBtn" v-on:click="removeItem(todoItem.item, index)">
+          <span class="removeBtn" v-on:click="removeItem({todoItem, index})">
             <i class="removeBtn fas fa-trash-alt"></i>
           </span>
         </li>
@@ -13,23 +13,18 @@
 </template>
 
 <script>
+import {mapGetters, mapMutations} from 'vuex'
 
 export default {
   methods : {
-    removeItem : function(key, index){
-      const removeObj = {keyValue : key,indexValue : index}
-      //this.$emit('removeItem',removeObj)
-      this.$store.commit('removeItem',removeObj)
-      //console.log("removeIndex : ",index)
-      //localStorage.removeItem(key)
-    },
-    itemCompleted : function(key, index){
-      const itemStatus = {keyValue : key,indexValue : index}
-      //this.$emit('itemCompleted', completeStatus)
-      this.$store.commit('completeStatus',itemStatus)
-    }
+    ...mapMutations(['removeItem']),
+    ...mapMutations({
+      itemCompleted : 'completeStatus'
+    }),
   },
-  props:['propsData']
+  computed: {
+    ...mapGetters(['storedTodoItems'])
+  }
 }
 </script>
 
